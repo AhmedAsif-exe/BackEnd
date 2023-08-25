@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const authRoutes = require("./routes/auth");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 
