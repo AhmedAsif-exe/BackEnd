@@ -1,9 +1,8 @@
 const { json } = require("body-parser");
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 async function readData() {
-  const response = await fetch(
-    "https://logindatabase-d00f3-default-rtdb.asia-southeast1.firebasedatabase.app/user-enteries.json"
-  );
+  const response = await fetch(process.env.DBAPI);
   const data = await response.json();
   const entry = [];
   for (const key in data) {
@@ -16,16 +15,13 @@ async function readData() {
 }
 
 async function writeData(data) {
-  const response = await fetch(
-    "https://logindatabase-d00f3-default-rtdb.asia-southeast1.firebasedatabase.app/user-enteries.json",
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(process.env.DBAPI, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 exports.readData = readData;
