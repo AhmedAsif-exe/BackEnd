@@ -2,19 +2,18 @@ const bodyParser = require("body-parser");
 const express = require("express");
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const authRoutes = require("./routes/auth");
+const orderRoutes = require("./routes/order");
 const PORT = process.env.PORT || 8080;
-
+const cors = require("cors");
 const app = express();
-
+const { checkAuthMiddleware } = require("./util/auth");
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  next();
-});
 
 app.use(authRoutes);
+
+app.use(checkAuthMiddleware);
+app.use(orderRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.status || 500;
