@@ -7,7 +7,18 @@ const PORT = process.env.PORT || 8080;
 const cors = require("cors");
 const app = express();
 const { checkAuthMiddleware } = require("./util/auth");
-app.use(cors({ origin: "https://manga-quest.web.app/" }));
+const allowedOrigins = [`https://manga-quest.web.app`];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use(authRoutes);
